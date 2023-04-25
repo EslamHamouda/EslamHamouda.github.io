@@ -26,7 +26,7 @@
                 <div class="brand-logo">
                   <img src="../../assets/images/logo-svg.svg">
                 </div>
-                <form class="pt-3" action="http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/SignUPGPS.php" id="registerForm" method="post">
+                <form class="pt-3" action="https://airobserver4-001-site1.htempurl.com/ApiSiteGPS/SignUPGPS.php" id="registerForm" method="post">
                   <div class="form-group">
                     <label class="" for="exampleInputUsername1">First name</label>
                     <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="First-name Of Employee" name="FirstNameE">
@@ -281,7 +281,7 @@
           // }
 
           if (valid === true) {
-                    fetch('http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/SignUPGPS.php', {
+                    fetch('https://airobserver4-001-site1.htempurl.com/ApiSiteGPS/SignUPGPS.php', {
                       method: 'POST',
                       body: new FormData(event.target)
                     })
@@ -292,10 +292,10 @@
                         localStorage.setItem('userData', JSON.stringify(data.message));
                         location.reload();
                         console.log(data.message);
-                        // window.location.href = 'http://airobserver4-001-site1.htempurl.com/UserOTPWeb.php';
+                        // window.location.href = 'https://airobserver4-001-site1.htempurl.com/UserOTPWeb.php';
                       } else {
                         console.log('Error:', data.message);
-                        // window.location.href = 'http://airobserver4-001-site1.htempurl.com/register.php';
+                        // window.location.href = 'https://airobserver4-001-site1.htempurl.com/register.php';
                         const errorMsg = data.message;
                         messageError.classList.remove("d-none");
                         // messageError.classList.add("d-block");
