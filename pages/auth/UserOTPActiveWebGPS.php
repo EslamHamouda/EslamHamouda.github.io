@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <!-- Required meta tags -->
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+     <!-- Layout styles -->
+     <link rel="stylesheet" href="../../assets/css/style.css">
+     <!-- End layout styles -->
+     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth ">
+          <div class="row flex-grow">
+            <div class="col-lg-4 mx-auto">
+              <div class="auth-form-light text-left">
+                <div class="brand-logo">
+                  <img src="../../assets/images/logo-svg.svg">
+                </div>
+                <h2 class="otp-verfiy">OTP verification</h2>
+                <p class="otp-send">code has been sent to <span class="user-mail"></span></p>
+                <form class="OTP-card" id="OTPForm" action="http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserOTPofEmployeeGPS.php" method="post">
+                  <div class="form-group email-OTP d-none">
+                    <label class="" for="exampleEmail">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="exampleEmail" placeholder="Email" name="EmailE">
+                  </div>
+                  <div class="inputs-card">
+                    <input type="number" maxlength="1" id="OTP1" autofocus>
+                    <input type="number" maxlength="1" id="OTP2">
+                    <input type="number" maxlength="1" id="OTP3">
+                    <input type="number" maxlength="1" id="OTP4">
+                    <input type="number" maxlength="1" id="OTP5">
+                    <input type="number" maxlength="1" id="OTP6">
+                  </div>
+                </form>
+                <div class="warning">
+                  <p class="OTP-warn text-center">
+                    <i class="uil uil-exclamation-octagon"></i>
+                    <span class="warning-msg">Enter the OTP sent to your Email</span>
+                  </p>
+                </div>
+                <p class="msg-send otp-resend c-cyan">You will receive a confirmation OTP message within<span id="countdown" class="time-counter" style="color:red;"> 2:00 </span>minutes.</p>
+                <p class="not-correct mt-2 text-center d-none" style="color: red;"><i class="uil uil-exclamation-octagon"></i>The OTP is wrong. Please check again.</p>
+                <p class="otp-resend">Didn't receive the OTP? <a href="#" class="resend-OTP">Resend</a></p>
+                <div class="mt-3">
+                  <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" id="verifyBtn">Verify</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+
+
+  let form = document.getElementById("OTPForm");
+  let OTPInputs = document.querySelectorAll("#OTPForm input[type='number']");
+  let OTPPara = document.querySelector(".OTP-warn");
+  let verifyBtn = document.getElementById("verifyBtn");
+  let userMail = document.querySelector(".user-mail");
+  let sendMail = document.getElementById("exampleEmail");
+  let resend = document.querySelector(".resend-OTP");
+  let wrongOTP = document.querySelector(".not-correct");
+  let mail = sessionStorage.getItem("mail");
+
+
+  userMail.innerHTML = mail;
+    
+
+  verifyBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+    sendMail.value = mail;
+    let otpValue = parseInt(Array.from(OTPInputs).map(input => parseInt(input.value)).join(''));
+    // console.log(sendMail.value)
+
+    const formData = new FormData();
+    formData.append('EmailE', mail);
+    formData.append('verifycode', otpValue);
+    // console.log(formData);
+
+fetch('http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserOTPofEmployeeGPS.php', {
+  method: 'POST',
+  body: formData 
+}).then(response => response.json())
+    .then(data => {
+      if(OTPInputs.value === ""){
+        OTPPara.classList.remove("OTP-warn");
+        OTPPara.classList.add("show-warn");
+      }
+      if (data.Code === 200) {
+        window.location.href = 'http://airobserver4-001-site1.htempurl.com/project%20site%20GPS/UserNewPasswordWebGPS.php';
+      }else if (data.Code === 400 && !(OTPInputs.value === "")) {
+        OTPPara.classList.add("OTP-warn");
+        wrongOTP.classList.remove("d-none");
+        wrongOTP.classList.add("d-block");
+    }
+    })
+    .catch(error => console.error(error));
+  });
+
+OTPInputs.forEach((input, index) => {
+  input.addEventListener('input', (event) => {
+    const currentValue = event.target.value;
+    const nextInput = OTPInputs[index + 1];
+    const prevInput = OTPInputs[index - 1];
+
+    if (currentValue.length === 1 && nextInput) {
+      nextInput.focus();
+    } else if (currentValue.length === 0 && prevInput) {
+      prevInput.focus();
+    }
+  });
+
+  input.addEventListener('paste', (event) => {
+    event.preventDefault();
+    const pasteData = event.clipboardData.getData('text/plain');
+    const pasteDigits = pasteData.match(/\d/g);
+    if (pasteDigits !== null && pasteDigits.length === OTPInputs.length) {
+      for (let i = 0; i < pasteDigits.length; i++) {
+        OTPInputs[i].value = pasteDigits[i];
+        if (i < OTPInputs.length - 1) {
+          OTPInputs[i].dispatchEvent(new Event('input'));
+        }
+      }
+    }
+  });
+
+//   OTPInputs[OTPInputs.length - 1].addEventListener('input', (event) => {
+//     const currentValue = event.target.value;
+//     if (currentValue.length === 1) {
+//       form.submit();
+//     }
+//   });
+});
+
+    var countdownTime = 120; 
+    
+    if (localStorage.getItem('countdownEndTime')) {
+      var countdownEndTime = new Date(localStorage.getItem('countdownEndTime'));
+      var now = new Date();
+      var remainingTime = Math.floor((countdownEndTime - now) / 1000);
+      
+      if (remainingTime > 0) {
+        countdownTime = remainingTime;
+      }
+    }
+
+    var timer = setInterval(function() {
+    var minutes = Math.floor(countdownTime / 60);
+    var seconds = countdownTime % 60;
+    minutes = String(minutes).padStart(2);
+    seconds = String(seconds).padStart(2,"0")
+    var countdownElem = document.getElementById('countdown');
+    countdownElem.textContent = ' ' + minutes + ':' + seconds + ' ';
+    countdownTime--;
+    if (countdownTime < 0) {
+      clearInterval(timer);
+      countdownElem.textContent = ' 0:00 ';
+    }
+    }, 1000); 
+    var countdownEndTime = new Date(Date.now() + countdownTime * 1000);
+    localStorage.setItem('countdownEndTime', countdownEndTime);
+
+
+resend.addEventListener("click", function(event) {
+  event.preventDefault();
+
+  // Send a fetch request to the API
+  const emailData = new FormData();
+    emailData.append('EmailE', mail);
+  fetch("http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserResendOTPAgainGPS.php",{
+    method: 'POST',
+    body: emailData
+  }).then(response => response.json())
+    .then(data => {
+      if (data.Code === 200) {
+        // If the response code is 200, restart the countdown timer
+        var countdownTime = 120; // 2 minutes * 60 seconds
+        var countdownElem = document.getElementById('countdown');
+        countdownElem.textContent = ' 02:00 ';
+        clearInterval(timer);
+        timer = setInterval(function() {
+          var minutes = Math.floor(countdownTime / 60);
+          var seconds = countdownTime % 60;
+          minutes = String(minutes).padStart(2);
+          seconds = String(seconds).padStart(2,"0")
+          countdownElem.textContent = ' ' + minutes + ':' + seconds + ' ';
+          countdownTime--;
+          if (countdownTime < 0) {
+            clearInterval(timer);
+            countdownElem.textContent = ' 0:00 ';
+          }
+        }, 1000); 
+        var countdownEndTime = new Date(Date.now() + countdownTime * 1000);
+        localStorage.setItem('countdownEndTime', countdownEndTime);
+      }
+    })
+    .catch(error => console.log(error));
+});
+
+</script>
+  <!-- plugins:js -->
+  <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+ <script src="../../assets/js/off-canvas.js"></script>
+ <script src="../../assets/js/hoverable-collapse.js"></script>
+ <script src="../../assets/js/misc.js"></script>
+ <!-- endinject -->
+  </body>
+</html>
