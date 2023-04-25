@@ -100,7 +100,7 @@ fetch('http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserOTPofEmployeeGP
         OTPPara.classList.add("show-warn");
       }
       if (data.Code === 200) {
-        window.location.href = 'http://airobserver4-001-site1.htempurl.com/project%20site%20GPS/UserNewPasswordWebGPS.php';
+        window.location.href = 'http://airobserver4-001-site1.htempurl.com/project%20site%20GPS/UserNewPasswordWebGPS.html';
       }else if (data.Code === 400 && !(OTPInputs.value === "")) {
         OTPPara.classList.add("OTP-warn");
         wrongOTP.classList.remove("d-none");
