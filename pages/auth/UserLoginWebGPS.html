@@ -129,7 +129,7 @@ form.addEventListener("submit", function(event) {
   if (valid === true) {
           event.preventDefault(); // prevent the form submission
         
-          fetch('http://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserLoginGPS.php', {
+          fetch('https://airobserver4-001-site1.htempurl.com/ApiSiteGPS/UserLoginGPS.php', {
             method: 'POST',
             body: new FormData(event.target)
           })
