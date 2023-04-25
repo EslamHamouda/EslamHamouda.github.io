@@ -101,7 +101,7 @@
               if (data.Code === 200) {
                 localStorage.setItem('userData', JSON.stringify(data.message));
                 console.log(data.message);
-                window.location.href = 'http://airobserver4-001-site1.htempurl.com/project site GPS/UserNewPasswordWebGPS.php';
+                window.location.href = 'https://eslamhamouda.github.io/pages/auth/UserNewPasswordWebGPS.html';
               } else {
                 console.log('Error:', data.message);
                 messageError.classList.remove("d-none");
